@@ -511,8 +511,8 @@ let updatePasswordFunction = (req, res) => {
                         <p>
                             Password updated successfully.
                         </p>
-                        <h3> Thanks for using Soft Chat </h3>
-                        co-founder,Soft Chat  
+                        <h3> Thanks for using Toker </h3>
+                        co-founder,Toker
                         <br><b>Ankit Singh </b>
                                     `
                     }
