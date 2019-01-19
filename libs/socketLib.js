@@ -1,15 +1,18 @@
 const socketio = require('socket.io');
 const tokenLib = require('./tokenLib');
-const jwt = require('jsonwebtoken')
+
 //importing redisLibrary
 const redisLib = require("./redisLib");
-
 
 const mongoose = require('mongoose');
 const shortid = require("shortid")
 const UserModel = mongoose.model('UserModel')
 
 const IssuesModel = mongoose.model('IssuesModel');
+const jwt = require('jsonwebtoken')
+
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
 
 
 let setServer = (server) => {
@@ -24,7 +27,7 @@ let setServer = (server) => {
         socket.emit("verify-user", "Please Provide AuthToken For Verification")
 
         socket.on("set-user", (authToken)=>{
-            tokenLib.verifyClaimWithoutSecret(authToken, (err, userdata)=>{
+            tokenLib.verifyClaimsWithoutSecret(authToken, (err, userdata)=>{
                 if(err){
                     socket.emit('auth-error', "Please Provide Correct authToken Details")
                 }else{
@@ -35,7 +38,7 @@ let setServer = (server) => {
                     let key = currentUser.userId;
                     let value = fullName;                  
 
-                     redisLib.setANewOnlineUserInHash("onlineUsersIssueTracker", key, value, (err, allOnlineUsers) => {
+                    let setUserOnline = redisLib.setANewOnlineUserInHash("onlineUsersIssueTracker", key, value, (err, allOnlineUsers) => {
                         if (err) {
                             logger.error(` error printed 1 : ${err.message}`, "socketLib:SetANewOnlineUserInHash", 10);
                         }

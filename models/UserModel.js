@@ -45,13 +45,6 @@ let userSchema = new Schema({
     default: ''
   },
 
-
-  userVerificationStatus:{
-     type:Boolean,
-     default:false
-
-  }
-  ,
   createdOn :{
     type:Date,
     default: new Date()

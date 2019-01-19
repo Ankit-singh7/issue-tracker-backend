@@ -98,34 +98,6 @@ let signUpFunction = (req, res) => {
 
 }// end user signup function 
 
-let verifyUser = (req, res) => {
-
-    if (check.isEmpty(req.params.userId)) {
-        logger.error("UserId is missing", "UserController: verifyUser()", 10);
-        let apiResponse = response.generate(true, "userId is missing", 500, null);
-        res.send(apiResponse);
-    } else {
-        UserModel.update({ userId: req.params.userId }, { userVerificationStatus: true }, { multi: true }, (err, result) => {
-
-            if (err) {
-                logger.error("Failed to verify User ", "userController: verifyUser()", 10);
-                let apiResponse = response.generate(true, "Failed to verify user", 500, null);
-                res.send(apiResponse);
-            }
-            else if (check.isEmpty(result)) {
-                logger.error("User Not found", "userController: verifyUser()", 10);
-                let apiResponse = response.generate(true, "User not found", 500, null);
-                res.send(apiResponse);
-            }
-            else {
-                logger.info("User Verified", "userController: verifyUser()", 10);
-                let apiResponse = response.generate(false, "user found & verified", 200, "User Verified Successfully");
-                res.send(apiResponse);
-            }
-        });
-    }
-}//end verifyUser
-
 
 // start of login function 
 let loginFunction = (req, res) => {
@@ -760,7 +732,6 @@ module.exports = {
     getAllUser: getAllUser,
     deleteUser: deleteUser,
     getSingleUser: getSingleUser,
-    verifyUser:verifyUser,
     loginFunction: loginFunction,
     logout: logout,
     resetPasswordFunction:resetPasswordFunction,
