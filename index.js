@@ -81,7 +81,8 @@ fs.readdirSync(modelsPath).forEach(function(file)
 
 
  //creating HTTP server
- const server=http.createServer(app);
+ const server=app.listen(3000);
+ const io=require('socket.io').listen(server);
 
  //starting listening to http server required by socket
  console.log(appConfig);
