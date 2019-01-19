@@ -40,6 +40,11 @@ let userSchema = new Schema({
     default: ''
   },
 
+  recoveryPassword: { //will generate automatically while resetting password
+    type: String,
+    default: ''
+  },
+
 
   createdOn :{
     type:Date,

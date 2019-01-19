@@ -443,6 +443,7 @@ let resetPasswordFunction = (req, res) => {
 /* params : recoveryPassword,paswword
 */
 
+
 let updatePasswordFunction = (req, res) => {
 
     let findUser = () => {
@@ -505,14 +506,14 @@ let updatePasswordFunction = (req, res) => {
 
                     let sendEmailOptions = {
                         email: userDetails.email,
-                        subject: 'Password Updated for Soft Chat ',
+                        subject: 'Password Updated for Toker ',
                         html: `<h4> Hi ${userDetails.firstName}</h4>
                         <p>
                             Password updated successfully.
                         </p>
                         <h3> Thanks for using Soft Chat </h3>
-                        Service Management Leader,Soft Chat  
-                        <br><b>Shahrukh Sayyed </b>
+                        co-founder,Soft Chat  
+                        <br><b>Ankit Singh </b>
                                     `
                     }
 
@@ -638,14 +639,14 @@ let changePasswordFunction = (req, res) => {
 
                     let sendEmailOptions = {
                         email: userDetails.email,
-                        subject: 'Password Updated for Soft Chat ',
+                        subject: 'Password Updated for Toker ',
                         html: `<h4> Hi ${userDetails.firstName}</h4>
                         <p>
                             Password updated successfully.
                         </p>
-                        <h3> Thanks for using Soft Chat </h3>
-                        Service Management Leader,Soft Chat  
-                        <br><b>Shahrukh Sayyed </b>
+                        <h3> Thanks for using Toker </h3>
+                        Service Management Leader,Toker  
+                        <br><b>Ankit Singh </b>
                                     `
                     }
                     console.log(sendEmailOptions)

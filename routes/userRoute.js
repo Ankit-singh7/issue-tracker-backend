@@ -264,7 +264,7 @@ let setRouter=(app) => {
  /**
      * @apiGroup users
      * @apiVersion  1.0.0
-     * @api {post}  http://api.toker.ml/api/v1/users/updatePassword api for Updating Password after Reset.
+     * @api {post}  http://api.toker.ml/api/v1/users/update-password api for Updating Password after Reset.
      *
      * @apiParam {string} recoveryPassword recoveryPassword of the user recieved on Email. (body params) (required)
      * @apiParam {string} password new password of the user . (body params) (required)
