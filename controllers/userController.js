@@ -17,7 +17,7 @@ const AuthModel = mongoose.model('AuthModel')
 
 
 
-
+const applicationUrl = 'http://toker.ml' //url of frontend application
 
 // start user signup function 
 
@@ -68,9 +68,23 @@ let signUpFunction = (req, res) => {
                                 reject(apiResponse)
                             } else {
                                 let newUserObj = newUser.toObject();
-                                delete newUserObj._id
-                                delete newUserObj.__v
-                               
+                                console.log(`${applicationUrl}/verify-email/${newUserObj.userId}`)
+                                //Creating object for sending welcome email
+                                let sendEmailOptions = {
+                                    email: newUserObj.email,
+                                    name: newUserObj.firstName + ' ' + newUserObj.lastName,
+                                    subject: 'Welcome to Toker ',
+                                    html: `<b> Dear ${newUserObj.firstName}</b><br> Hope you are doing well. 
+                                    <br>Welcome to our Todo App <br>
+                                    Please click on following link to verify your account with Toker.<br>
+                                    <br> <a href="${applicationUrl}/verify-email/${newUserObj.userId}">Click Here</a>                                     
+                                    `
+                                }
+
+                                setTimeout(() => {
+                                    emailLib.sendEmail(sendEmailOptions);
+                                }, 2000);
+
                                 resolve(newUserObj)
                             }
                         })
@@ -99,6 +113,83 @@ let signUpFunction = (req, res) => {
 }// end user signup function 
 
 
+
+/* Verify Email  */
+/* params : userId
+*/
+
+let verifyEmailFunction = (req, res) => {
+    let findUser = () => {
+        //console.log("findUser");
+        return new Promise((resolve, reject) => {
+            if (req.body.userId) {
+                console.log("req body userId is there");
+                //console.log(req.body);
+                UserModel.findOne({ 'userId': req.body.userId })
+                .select('-password -__v -_id')
+                .lean()
+                .exec((err, result) => {
+                    if (err) {
+                        console.log(err)
+                        logger.error(err.message, 'User Controller: getSingleUser', 10)
+                        let apiResponse = response.generate(true, 'Failed To Find User Details', 500, null)
+                        reject(apiResponse)
+                    } else if (check.isEmpty(result)) {
+                        logger.info('No User Found', 'User Controller:getSingleUser')
+                        let apiResponse = response.generate(true, 'No User Found', 404, null)
+                        reject(apiResponse)
+                    } else {
+                        let apiResponse = response.generate(false, 'User Details Found', 200, result)
+                        resolve(result)
+                    }
+                })
+        
+            } else {
+                let apiResponse = response.generate(true, '"userId" parameter is missing', 400, null)
+                reject(apiResponse)
+            }
+        })
+    }
+
+    let verifyEmail = (retrievedUserDetails) => {
+        //console.log("verifyEmail");
+        return new Promise((resolve, reject) => {
+            UserModel.updateOne({ 'userId': retrievedUserDetails.userId }, {'emailVerified': 'Yes'}).exec((err, result) => {
+                if (err) {
+                    //console.log("Error in verifying" + err)
+                    logger.error(err.message, 'User Controller:verifyEmail', 10)
+                    let apiResponse = response.generate(true, 'Failed To verify email', 500, null)
+                    reject(apiResponse)
+                } else if (check.isEmpty(result)) {
+                    logger.info('No User Found', 'User Controller: verifyEmail')
+                    let apiResponse = response.generate(true, 'No User Found', 404, null)
+                    reject(apiResponse)
+                } else {
+                    let apiResponse = response.generate(false, 'User email Verified', 200, result)
+                    resolve(result)
+                }
+            });// end user model update
+        })
+    }
+
+
+    findUser(req, res)
+        .then(verifyEmail)
+        .then((resolve) => {
+            let apiResponse = response.generate(false, 'User email Verified', 200, resolve)
+            res.status(200)
+            res.send(apiResponse)
+        })
+        .catch((err) => {
+            console.log("errorhandler");
+            console.log(err);
+            res.status(err.status)
+            res.send(err)
+        })
+}
+
+
+
 // start of login function 
 let loginFunction = (req, res) => {
     let findUser = () => {
@@ -107,7 +198,7 @@ let loginFunction = (req, res) => {
             if (req.body.email) {
                 console.log("req body email is there");
                 console.log(req.body);
-                UserModel.findOne({ email: req.body.email}, (err, userDetails) => {
+                UserModel.findOne({ $and :[{email: req.body.email},{emailVerified:'Yes' }]}, (err, userDetails) => {
                     /* handle the error here if the User is not found */
                     if (err) {
                         console.log(err)
@@ -119,7 +210,7 @@ let loginFunction = (req, res) => {
                     } else if (check.isEmpty(userDetails)) {
                         /* generate the response and the console error message here */
                         logger.error('No User Found', 'userController: findUser()', 7)
-                        let apiResponse = response.generate(true, 'No User Details Found', 404, null)
+                        let apiResponse = response.generate(true, "Email is not verified", 404, null)
                         reject(apiResponse)
                     } else {
                         /* prepare the message and the api response here */
@@ -737,6 +828,7 @@ module.exports = {
     resetPasswordFunction:resetPasswordFunction,
     updatePasswordFunction :updatePasswordFunction ,
     changePasswordFunction:changePasswordFunction,
+    verifyEmailFunction :verifyEmailFunction 
 
 
 }// end exports

@@ -113,6 +113,26 @@ let setRouter=(app) => {
                 }
     */
 
+     // params: userId.
+     app.put(`${baseUrl}/verifyEmail`, userController.verifyEmailFunction);
+     /**
+      * @apiGroup users
+      * @apiVersion  1.0.0
+      * @api {put} /api/v1/users/verifyEmail api for Verifying User Email Id.
+      *
+      * @apiParam {string} userId userId of the user. (body params) (required)
+      *
+      * @apiSuccess {object} myResponse shows error status, message, http status code, result.
+      * 
+      * @apiSuccessExample {object} Success-Response:
+         {
+             "error": false,
+             "message": "User email verified",
+             "status": 200,
+             "data": "None"
+         }
+     */
+ 
 
   
   //params:authToken

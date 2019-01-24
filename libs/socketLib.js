@@ -9,7 +9,7 @@ const shortid = require("shortid")
 const UserModel = mongoose.model('UserModel')
 
 const IssuesModel = mongoose.model('IssuesModel');
-const jwt = require('jsonwebtoken')
+
 
 const events = require('events');
 const eventEmitter = new events.EventEmitter();

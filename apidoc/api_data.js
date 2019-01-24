@@ -756,7 +756,7 @@ define({ "api": [
     "group": "users",
     "version": "1.0.0",
     "type": "post",
-    "url": "http://api.toker.ml/api/v1/users/updatePassword",
+    "url": "http://api.toker.ml/api/v1/users/update-password",
     "title": "api for Updating Password after Reset.",
     "parameter": {
       "fields": {
@@ -800,6 +800,6 @@ define({ "api": [
     },
     "filename": "routes/userRoute.js",
     "groupTitle": "users",
-    "name": "PostHttpApiTokerMlApiV1UsersUpdatepassword"
+    "name": "PostHttpApiTokerMlApiV1UsersUpdatePassword"
   }
 ] });
