@@ -44,7 +44,7 @@ const routesPath = './routes';
 
 const modelsPath = './models';
 
-/*
+
 //acts as a middleware
 //to handle CORS Errors
 app.use((req, res, next) => { //doesn't send response just adjusts it
@@ -59,7 +59,7 @@ app.use((req, res, next) => { //doesn't send response just adjusts it
     }
     next(); //so that other routes can take over
 })
-*/
+
 
 //Bootstrap models
 fs.readdirSync(modelsPath).forEach(function (file) {
