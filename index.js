@@ -11,6 +11,8 @@ const routeLoggerMiddleware = require('./middlewares/routeLogger.js');
 const logger = require('./libs/loggerLib');
 const morgan = require('morgan');
 const app = express();
+app.use(cors());
+app.options('*', cors());
 
 
 app.use(morgan('dev'));
