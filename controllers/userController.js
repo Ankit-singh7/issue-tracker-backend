@@ -19,6 +19,106 @@ const AuthModel = mongoose.model('AuthModel')
 
 const applicationUrl = 'http://toker.ml' //url of frontend application
 
+// start user signup function 
+
+let signUpFunction = (req, res) => {
+
+    let validateUserInput = () => {
+        return new Promise((resolve, reject) => {
+            if (req.body.email) {
+                if (!validateInput.Email(req.body.email)) {
+                    let apiResponse = response.generate(true, 'Email Does not met the requirement', 400, null)
+                    reject(apiResponse)
+                } else if (check.isEmpty(req.body.password)) {
+                    let apiResponse = response.generate(true, '"password" parameter is missing"', 400, null)
+                    reject(apiResponse)
+                } else {
+                    resolve(req)
+                }
+            } else {
+                logger.error('Field Missing During User Creation', 'userController: createUser()', 5)
+                let apiResponse = response.generate(true, 'One or More Parameter(s) is missing', 400, null)
+                reject(apiResponse)
+            }
+        })
+    }// end validate user input
+    let createUser = () => {
+        return new Promise((resolve, reject) => {
+            UserModel.findOne({ email: req.body.email })
+                .exec((err, retrievedUserDetails) => {
+                    if (err) {
+                        logger.error(err.message, 'userController: createUser', 10)
+                        let apiResponse = response.generate(true, 'Failed To Create User', 500, null)
+                        reject(apiResponse)
+                    } else if (check.isEmpty(retrievedUserDetails)) {
+                        console.log(req.body)
+                        let newUser = new UserModel({
+                            userId: shortid.generate(),
+                            firstName:req.body.firstName,
+                            lastName:req.body.lastName,
+                            email: req.body.email.toLowerCase(),
+                            country:req.body.country,
+                            mobileNumber:req.body.mobileNumber,
+                            password: passwordLib.hashpassword(req.body.password),
+                            createdOn: time.now()
+                        })
+                        newUser.save((err, newUser) => {
+                            if (err) {
+                                console.log(err)
+                                logger.error(err.message, 'userController: createUser', 10)
+                                let apiResponse = response.generate(true, 'Failed to create new User', 500, null)
+                                reject(apiResponse)
+                            } else {
+                                let newUserObj = newUser.toObject();
+                                console.log(`${applicationUrl}/verify-email/${newUserObj.userId}`)
+                                //Creating object for sending welcome email
+                                let sendEmailOptions = {
+                                    email: newUserObj.email,
+                                    name: newUserObj.firstName + ' ' + newUserObj.lastName,
+                                    subject: 'Welcome to Toker ',
+                                    html: `<b> Dear ${newUserObj.firstName}</b><br> Hope you are doing well. 
+                                    <br>Welcome to our Toker App <br>
+                                    Please click on following link to verify your account with Toker.<br>
+                                    <br> <a href="${applicationUrl}/verify-email/${newUserObj.userId}">Click Here</a>                                     
+                                    `
+                                }
+
+                                setTimeout(() => {
+                                    emailLib.sendEmail(sendEmailOptions);
+                                }, 2000);
+
+                                resolve(newUserObj)
+                            }
+                        })
+                    } else {
+                        logger.error('User Cannot Be Created.User Already Present', 'userController: createUser', 4)
+                        let apiResponse = response.generate(true, 'User Already Present With this Email', 403, null)
+                        reject(apiResponse)
+                    }
+                })
+        })
+    }// end create user function
+
+
+    validateUserInput(req, res)
+        .then(createUser)
+        .then((resolve) => {
+            delete resolve.password
+            let apiResponse = response.generate(false, 'User created', 200, resolve)
+            res.send(apiResponse)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send(err);
+        })
+
+}// end user signup function 
+
+
+
+/* Verify Email  */
+/* params : userId
+*/
 
 let verifyEmailFunction = (req, res) => {
     let findUser = () => {
@@ -90,100 +190,6 @@ let verifyEmailFunction = (req, res) => {
         })
 }
 
-
-let signUpFunction = (req, res) => {
-
-    let validateUserInput = () => {
-        return new Promise((resolve, reject) => {
-            if (req.body.email) {
-                if (!validateInput.Email(req.body.email)) {
-                    let apiResponse = response.generate(true, 'Email Does not met the requirement', 400, null)
-                    reject(apiResponse)
-                } else if (check.isEmpty(req.body.password)) {
-                    let apiResponse = response.generate(true, '"password" parameter is missing"', 400, null)
-                    reject(apiResponse)
-                } else {
-                    resolve(req)
-                }
-            } else {
-                logger.error('Field Missing During User Creation', 'userController: createUser()', 5)
-                let apiResponse = response.generate(true, 'One or More Parameter(s) is missing', 400, null)
-                reject(apiResponse)
-            }
-        })
-    }// end validate user input
-
-    let createUser = () => { 
-        return new Promise((resolve, reject) => {
-            UserModel.findOne({ email: req.body.email })
-                .exec((err, retrievedUserDetails) => {
-                    if (err) {
-                        logger.error(err.message, 'userController: createUser', 10)
-                        let apiResponse = response.generate(true, 'Failed To Create User', 500, null)
-                        reject(apiResponse)
-                    } else if (check.isEmpty(retrievedUserDetails)) {
-                        console.log(req.body)
-                        let newUser = new UserModel({
-                            userId: shortid.generate(),
-                            firstName: req.body.firstName,
-                            lastName: req.body.lastName || '',
-                            country:req.body.country,
-                            mobileNumber:req.body.mobileNumber,
-                            email: req.body.email.toLowerCase(),
-                            password: passwordLib.hashpassword(req.body.password),
-                            createdOn: time.now()
-                        })
-                        newUser.save((err, newUser) => {
-                            if (err) {
-                                console.log(err)
-                                logger.error(err.message, 'userController: createUser', 10)
-                                let apiResponse = response.generate(true, 'Failed to create new User', 500, null)
-                                reject(apiResponse)
-                            } else {
-                                let newUserObj = newUser.toObject();
-                                console.log(`${applicationUrl}/verify-email/${newUserObj.userId}`)
-                                //Creating object for sending welcome email
-                                let sendEmailOptions = {
-                                    email: newUserObj.email,
-                                    name: newUserObj.firstName + ' ' + newUserObj.lastName,
-                                    subject: 'Welcome to Toker ',
-                                    html: `<b> Dear ${newUserObj.firstName}</b><br> Hope you are doing well. 
-                                    <br>Welcome to our Toker App <br>
-                                    Please click on following link to verify your account with Toker.<br>
-                                    <br> <a href="${applicationUrl}/verify-email/${newUserObj.userId}">Click Here</a>                                     
-                                    `
-                                }
-
-                                setTimeout(() => {
-                                    emailLib.sendEmail(sendEmailOptions);
-                                }, 2000);
-
-                                resolve(newUserObj)
-                            }
-                        })
-                    } else {
-                        logger.error('User Cannot Be Created.User Already Present', 'userController: createUser', 4)
-                        let apiResponse = response.generate(true, 'User Already Present With this Email', 403, null)
-                        reject(apiResponse)
-                    }
-                })
-        })
-    }// end create user function
-
-
-    validateUserInput(req, res)
-        .then(createUser)
-        .then((resolve) => {
-            delete resolve.password
-            let apiResponse = response.generate(false, 'User created', 200, resolve)
-            res.send(apiResponse)
-        })
-        .catch((err) => {
-            console.log(err);
-            res.send(err);
-        })
-
-}// end user signup function 
 
 
 // start of login function 
