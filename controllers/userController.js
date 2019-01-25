@@ -127,7 +127,7 @@ let signUpFunction = (req, res) => {
                             userId: shortid.generate(),
                             firstName: req.body.firstName,
                             lastName: req.body.lastName || '',
-                            countryName:req.body.countryName,
+                            country:req.body.country,
                             mobileNumber:req.body.mobileNumber,
                             email: req.body.email.toLowerCase(),
                             password: passwordLib.hashpassword(req.body.password),
