@@ -185,7 +185,7 @@ let loginFunction = (req, res) => {
             if (req.body.email) {
                 console.log("req body email is there");
                 console.log(req.body);
-                UserModel.findOne({email: req.body.email}, (err, userDetails) => {
+                UserModel.findOne({ email: req.body.email}, (err, userDetails) => {
                     /* handle the error here if the User is not found */
                     if (err) {
                         console.log(err)
@@ -197,7 +197,7 @@ let loginFunction = (req, res) => {
                     } else if (check.isEmpty(userDetails)) {
                         /* generate the response and the console error message here */
                         logger.error('No User Found', 'userController: findUser()', 7)
-                        let apiResponse = response.generate(true, "Email is not verified", 404, null)
+                        let apiResponse = response.generate(true, 'No User Details Found', 404, null)
                         reject(apiResponse)
                     } else {
                         /* prepare the message and the api response here */
@@ -266,7 +266,6 @@ let loginFunction = (req, res) => {
                     let newAuthToken = new AuthModel({
                         userId: tokenDetails.userId,
                         authToken: tokenDetails.token,
-                        name:tokenDetails.name,
                         tokenSecret: tokenDetails.tokenSecret,
                         tokenGenerationTime: time.now()
                     })
