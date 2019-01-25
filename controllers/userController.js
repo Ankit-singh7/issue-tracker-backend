@@ -815,7 +815,7 @@ module.exports = {
     resetPasswordFunction:resetPasswordFunction,
     updatePasswordFunction :updatePasswordFunction ,
     changePasswordFunction:changePasswordFunction,
-    verifyEmailFunction :verifyEmailFunction 
+ //   verifyEmailFunction :verifyEmailFunction 
 
 
 }// end exports

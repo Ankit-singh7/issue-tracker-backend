@@ -114,7 +114,7 @@ let setRouter=(app) => {
     */
 
      // params: userId.
-     app.put(`${baseUrl}/verifyEmail`, userController.verifyEmailFunction);
+  //   app.put(`${baseUrl}/verifyEmail`, userController.verifyEmailFunction);
      /**
       * @apiGroup users
       * @apiVersion  1.0.0
