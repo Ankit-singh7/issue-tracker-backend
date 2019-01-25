@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const appConfig = require('./config/appConfig');
 const fs = require('fs');
 const http = require('http');
+var cors = require('cors');
+
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -12,7 +14,7 @@ const logger = require('./libs/loggerLib');
 const morgan = require('morgan');
 const app = express();
 app.use(cors());
-app.options('*', cors());
+
 
 
 app.use(morgan('dev'));
@@ -43,10 +45,10 @@ const routesPath = './routes';
 const modelsPath = './models';
 
 
-app.all('*', function(req, res, next) {
+app.use('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
   next();
 });
 
