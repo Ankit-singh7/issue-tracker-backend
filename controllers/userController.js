@@ -200,7 +200,7 @@ let loginFunction = (req, res) => {
             if (req.body.email) {
                 console.log("req body email is there");
                 console.log(req.body);
-                UserModel.findOne({ $and :[{email: req.body.email},{emailVerified:'Yes' }]}, (err, userDetails) => {
+                UserModel.findOne({email: req.body.email}, (err, userDetails) => {
                     /* handle the error here if the User is not found */
                     if (err) {
                         console.log(err)
