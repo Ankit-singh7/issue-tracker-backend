@@ -91,8 +91,6 @@ let verifyEmailFunction = (req, res) => {
 }
 
 
-// start user signup function 
-
 let signUpFunction = (req, res) => {
 
     let validateUserInput = () => {
@@ -114,7 +112,8 @@ let signUpFunction = (req, res) => {
             }
         })
     }// end validate user input
-    let createUser = () => {
+
+    let createUser = () => { 
         return new Promise((resolve, reject) => {
             UserModel.findOne({ email: req.body.email })
                 .exec((err, retrievedUserDetails) => {
@@ -126,8 +125,10 @@ let signUpFunction = (req, res) => {
                         console.log(req.body)
                         let newUser = new UserModel({
                             userId: shortid.generate(),
-                            firstName:req.body.firstName,
-                            lastName:req.body.lastName,
+                            firstName: req.body.firstName,
+                            lastName: req.body.lastName || '',
+                            countryName:req.body.countryName,
+                            mobileNumber:req.body.mobileNumber,
                             email: req.body.email.toLowerCase(),
                             password: passwordLib.hashpassword(req.body.password),
                             createdOn: time.now()
@@ -183,8 +184,6 @@ let signUpFunction = (req, res) => {
         })
 
 }// end user signup function 
-
-
 
 
 // start of login function 
