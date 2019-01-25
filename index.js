@@ -38,6 +38,8 @@ const libsPath = './libs';
 const middlewaresPath = './middlewares';
 const routesPath = './routes';
 
+const modelsPath = './models';
+
 
 app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -46,6 +48,13 @@ app.all('*', function(req, res, next) {
   next();
 });
 
+
+
+//Bootstrap models
+fs.readdirSync(modelsPath).forEach(function (file) {
+  if (~file.indexOf('.js')) require(modelsPath + '/' + file)
+});
+// end Bootstrap models
 
 // Bootstrap route
 fs.readdirSync(routesPath).forEach(function (file) {
