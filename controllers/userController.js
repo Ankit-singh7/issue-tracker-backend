@@ -70,24 +70,7 @@ let signUpFunction = (req, res) => {
                                 reject(apiResponse)
                             } else {
                                 let newUserObj = newUser.toObject();
-                                console.log(`${applicationUrl}/verify-email/${newUserObj.userId}`)
-                                //Creating object for sending welcome email
-                                let sendEmailOptions = {
-                                    email: newUserObj.email,
-                                    name: newUserObj.firstName + ' ' + newUserObj.lastName,
-                                    subject: 'Welcome to Toker ',
-                                    html: `<b> Dear ${newUserObj.firstName}</b><br> Hope you are doing well. 
-                                    <br>Welcome to our Toker App <br>
-                                    Please click on following link to verify your account with Toker.<br>
-                                    <br> <a href="${applicationUrl}/verify-email/${newUserObj.userId}">Click Here</a>                                     
-                                    `
-                                }
-
-                                setTimeout(() => {
-                                    emailLib.sendEmail(sendEmailOptions);
-                                }, 2000);
-
-                                resolve(newUserObj)
+                               resolve(newUserObj);
                             }
                         })
                     } else {
@@ -115,6 +98,27 @@ let signUpFunction = (req, res) => {
 }// end user signup function 
 
 
+/*___________________________
+
+/*   console.log(`${applicationUrl}/verify-email/${newUserObj.userId}`)
+                                //Creating object for sending welcome email
+                               let sendEmailOptions = {
+                                  email: newUserObj.email,
+                                    name: newUserObj.firstName + ' ' + newUserObj.lastName,
+                                    subject: 'Welcome to Toker ',
+                                    html: `<b> Dear ${newUserObj.firstName}</b><br> Hope you are doing well. 
+                                    <br>Welcome to our Toker App <br>
+                                    Please click on following link to verify your account with Toker.<br>
+                                    <br> <a href="${applicationUrl}/verify-email/${newUserObj.userId}">Click Here</a>                                     
+                                    `
+                                }
+
+                                setTimeout(() => {
+                                    emailLib.sendEmail(sendEmailOptions);
+                                }, 2000);
+
+
+_______________________________*/
 
 /* Verify Email  */
 /* params : userId

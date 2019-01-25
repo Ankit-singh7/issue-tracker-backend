@@ -44,10 +44,7 @@ let userSchema = new Schema({
     type: String,
     default: ''
   },
-  emailVerified:{
-    type:String,
-    default:'No'
-  },
+  
 
   createdOn :{
     type:Date,
@@ -64,3 +61,9 @@ let userSchema = new Schema({
 
 
 mongoose.model('UserModel', userSchema);
+
+
+/*emailVerified:{
+ *type:String,
+ * default:'No'
+},*/
