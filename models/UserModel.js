@@ -62,8 +62,3 @@ let userSchema = new Schema({
 
 mongoose.model('UserModel', userSchema);
 
-
-/*emailVerified:{
- *type:String,
- * default:'No'
-},*/

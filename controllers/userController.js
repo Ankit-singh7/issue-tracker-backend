@@ -17,7 +17,7 @@ const AuthModel = mongoose.model('AuthModel')
 
 
 
-const applicationUrl = 'http://toker.ml' //url of frontend application
+//const applicationUrl = 'http://toker.ml' //url of frontend application
 
 // start user signup function 
 
@@ -70,7 +70,9 @@ let signUpFunction = (req, res) => {
                                 reject(apiResponse)
                             } else {
                                 let newUserObj = newUser.toObject();
-                               resolve(newUserObj);
+                                
+
+                                resolve(newUserObj)
                             }
                         })
                     } else {
@@ -98,32 +100,11 @@ let signUpFunction = (req, res) => {
 }// end user signup function 
 
 
-/*___________________________
-
-/*   console.log(`${applicationUrl}/verify-email/${newUserObj.userId}`)
-                                //Creating object for sending welcome email
-                               let sendEmailOptions = {
-                                  email: newUserObj.email,
-                                    name: newUserObj.firstName + ' ' + newUserObj.lastName,
-                                    subject: 'Welcome to Toker ',
-                                    html: `<b> Dear ${newUserObj.firstName}</b><br> Hope you are doing well. 
-                                    <br>Welcome to our Toker App <br>
-                                    Please click on following link to verify your account with Toker.<br>
-                                    <br> <a href="${applicationUrl}/verify-email/${newUserObj.userId}">Click Here</a>                                     
-                                    `
-                                }
-
-                                setTimeout(() => {
-                                    emailLib.sendEmail(sendEmailOptions);
-                                }, 2000);
-
-
-_______________________________*/
 
 /* Verify Email  */
 /* params : userId
 */
-
+/*
 let verifyEmailFunction = (req, res) => {
     let findUser = () => {
         //console.log("findUser");
@@ -194,7 +175,7 @@ let verifyEmailFunction = (req, res) => {
         })
 }
 
-
+*/
 
 // start of login function 
 let loginFunction = (req, res) => {
@@ -838,3 +819,23 @@ module.exports = {
 
 
 }// end exports
+
+
+
+
+/*console.log(`${applicationUrl}/verify-email/${newUserObj.userId}`)
+                                //Creating object for sending welcome email
+                                let sendEmailOptions = {
+                                    email: newUserObj.email,
+                                    name: newUserObj.firstName + ' ' + newUserObj.lastName,
+                                    subject: 'Welcome to Toker ',
+                                    html: `<b> Dear ${newUserObj.firstName}</b><br> Hope you are doing well. 
+                                    <br>Welcome to our Toker App <br>
+                                    Please click on following link to verify your account with Toker.<br>
+                                    <br> <a href="${applicationUrl}/verify-email/${newUserObj.userId}">Click Here</a>                                     
+                                    `
+                                }
+
+                                setTimeout(() => {
+                                    emailLib.sendEmail(sendEmailOptions);
+                                }, 2000);*/
