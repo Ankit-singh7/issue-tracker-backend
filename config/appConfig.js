@@ -8,7 +8,7 @@ appConfig.allowedCorsOrigin="*";
 appConfig.env="dev";
 
 appConfig.db = {
-    uri: 'mongodb://127.0.0.1:27017/issueTrackerDB',
+    uri: 'mongodb://localhost/issueTrackerDB',
 
 }
 
