@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const appConfig = require('./config/appConfig');
 const fs = require('fs');
 const http = require('http');
-var cors = require('cors');
+
 
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -13,7 +13,7 @@ const routeLoggerMiddleware = require('./middlewares/routeLogger.js');
 const logger = require('./libs/loggerLib');
 const morgan = require('morgan');
 const app = express();
-app.use(cors());
+
 
 
 
@@ -44,14 +44,20 @@ const routesPath = './routes';
 
 const modelsPath = './models';
 
-
-app.use('*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
+//acts as a middleware
+//to handle CORS Errors
+app.use((req, res, next) => { //doesn't send response just adjusts it
+    res.header("Access-Control-Allow-Origin", "*") //* to give access to any origin
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization" //to give access to all the headers provided
+    );
+    if(req.method === 'OPTIONS'){
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET'); //to give access to all the methods provided
+        return res.status(200).json({});
+    }
+    next(); //so that other routes can take over
+})
 
 
 //Bootstrap models
