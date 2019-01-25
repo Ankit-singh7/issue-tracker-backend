@@ -37,6 +37,16 @@ const controllersPath = './controllers';
 const libsPath = './libs';
 const middlewaresPath = './middlewares';
 const routesPath = './routes';
+
+
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+  next();
+});
+
+
 // Bootstrap route
 fs.readdirSync(routesPath).forEach(function (file) {
   if (~file.indexOf('.js')) {
