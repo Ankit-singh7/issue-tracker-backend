@@ -18,7 +18,7 @@ const eventEmitter = new events.EventEmitter();
 let setServer = (server) => {
 
     let io = socketio.listen(server);
-    let myio = io.of('/')
+    let myio = io.of('')
     let allOnlineUsers = [];
 
     myio.on('connection', function(socket){
