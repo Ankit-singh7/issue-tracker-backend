@@ -1,20 +1,16 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const appConfig = require('./config/appConfig');
-const fs = require('fs');
-const http = require('http');
-
-
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const path = require('path');
-const globalErrorMiddleware = require('./middlewares/appErrorHandler');
-const routeLoggerMiddleware = require('./middlewares/routeLogger.js');
-const logger = require('./libs/loggerLib');
-const morgan = require('morgan');
+const fs = require('fs');
 const app = express();
-
-
+const http = require('http');
+const appConfig = require('./config/appConfig');
+const logger = require('./libs/loggerLib');
+const routeLoggerMiddleware = require('./middlewares/routeLogger.js');
+const globalErrorMiddleware = require('./middlewares/appErrorHandler');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
 
 
 app.use(morgan('dev'));
@@ -22,33 +18,26 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(routeLoggerMiddleware.logIp);
 app.use(globalErrorMiddleware.globalErrorHandler);
 
-
-
+//this line is for chat socket
+app.use(express.static(path.join(__dirname, 'client')));
 
 
 const modelsPath = './models';
-//Bootstrap models
-fs.readdirSync(modelsPath).forEach(function (file) {
-  if (~file.indexOf('.js')) require(modelsPath + '/' + file)
-});
-// end Bootstrap models
 const controllersPath = './controllers';
 const libsPath = './libs';
 const middlewaresPath = './middlewares';
 const routesPath = './routes';
 
-const modelsPath = './models';
-
-app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-  next();
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    next();
 });
-
 
 //Bootstrap models
 fs.readdirSync(modelsPath).forEach(function (file) {
@@ -92,6 +81,9 @@ const socketServer=socketLib.setServer(server);
  * Event listener for HTTP server "error" event.
  */
 
+
+
+
 function onError(error) {
   if (error.syscall !== 'listen') {
     logger.error(error.code + ' not equal listen', 'serverOnErrorHandler', 10)
@@ -127,7 +119,7 @@ function onListening() {
     : 'port ' + addr.port;
   ('Listening on ' + bind);
   logger.info('server listening on port' + addr.port, 'serverOnListeningHandler', 10);
-  let db = mongoose.connect(appConfig.db.uri,{ useNewUrlParser: true });
+  let db = mongoose.connect(appConfig.db.uri,{ useMongoClient: true });
 }
 
 process.on('unhandledRejection', (reason, p) => {
