@@ -27,8 +27,6 @@ app.use(globalErrorMiddleware.globalErrorHandler);
 
 
 
-//this line is for chat socket
-app.use(express.static(path.join(__dirname, 'client')));
 
 
 const modelsPath = './models';
