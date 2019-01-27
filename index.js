@@ -15,6 +15,26 @@ const morgan = require('morgan');
 
 app.use(morgan('dev'));
 
+
+
+const server = http.createServer(app);
+
+// start listening to http server
+console.log(appConfig);
+server.listen(appConfig.port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+// end server listening code
+
+//socket io connection handler
+const socketLib =require("./libs/socketLib");
+const socketServer=socketLib.setServer(server);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -77,22 +97,6 @@ app.use(globalErrorMiddleware.globalNotFoundHandler);
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
-// start listening to http server
-console.log(appConfig);
-server.listen(appConfig.port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-// end server listening code
-
-//socket io connection handler
-const socketLib =require("./libs/socketLib");
-const socketServer=socketLib.setServer(server);
-
-/**
- * Event listener for HTTP server "error" event.
- */
 
 
 
