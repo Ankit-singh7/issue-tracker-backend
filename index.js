@@ -1,5 +1,5 @@
 const express = require('express');
-var cors = require('cors')
+
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -13,11 +13,6 @@ const globalErrorMiddleware = require('./middlewares/appErrorHandler');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
-
-
-
-
-app.use(cors({credentials: true, origin: true}));
 app.use(morgan('dev'));
 
 app.use(bodyParser.json());
