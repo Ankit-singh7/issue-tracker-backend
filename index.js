@@ -1,4 +1,5 @@
 const express = require('express');
+var cors = require('cors')
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -12,7 +13,7 @@ const globalErrorMiddleware = require('./middlewares/appErrorHandler');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
-
+app.use(cors({credentials: true, origin: true}));
 app.use(morgan('dev'));
 
 app.use(bodyParser.json());
@@ -32,12 +33,12 @@ const libsPath = './libs';
 const middlewaresPath = './middlewares';
 const routesPath = './routes';
 
-app.all('*', function(req, res, next) {
+/*app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     next();
-});
+});*/
 
 //Bootstrap models
 fs.readdirSync(modelsPath).forEach(function (file) {
