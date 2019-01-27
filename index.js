@@ -8,23 +8,27 @@ const app = express();
 const http = require('http');
 const appConfig = require('./config/appConfig');
 const logger = require('./libs/loggerLib');
-const routeLoggerMiddleware = require('./middlewares/routeLogger.js');
+const routeLoggerMiddleware = require('./middlewares/routeLogger');
 const globalErrorMiddleware = require('./middlewares/appErrorHandler');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+
+
+
+
 
 app.use(cors({credentials: true, origin: true}));
 app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(routeLoggerMiddleware.logIp);
-app.use(globalErrorMiddleware.globalErrorHandler);
 
-//this line is for chat socket
-app.use(express.static(path.join(__dirname, 'client')));
+
+app.use(cookieParser());
+
+app.use(globalErrorMiddleware.globalErrorHandler);
+app.use(routeLoggerMiddleware.logIp);
+
 
 
 const modelsPath = './models';
