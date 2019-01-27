@@ -1,5 +1,4 @@
 const express = require('express');
-
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -8,42 +7,23 @@ const app = express();
 const http = require('http');
 const appConfig = require('./config/appConfig');
 const logger = require('./libs/loggerLib');
-const routeLoggerMiddleware = require('./middlewares/routeLogger');
+const routeLoggerMiddleware = require('./middlewares/routeLogger.js');
 const globalErrorMiddleware = require('./middlewares/appErrorHandler');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
+
 app.use(morgan('dev'));
-
-
-
-const server = http.createServer(app);
-
-// start listening to http server
-console.log(appConfig);
-server.listen(appConfig.port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-// end server listening code
-
-//socket io connection handler
-const socketLib =require("./libs/socketLib");
-const socketServer=socketLib.setServer(server);
-
-/**
- * Event listener for HTTP server "error" event.
- */
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-
 app.use(cookieParser());
-
-app.use(globalErrorMiddleware.globalErrorHandler);
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(routeLoggerMiddleware.logIp);
+app.use(globalErrorMiddleware.globalErrorHandler);
 
+//this line is for chat socket
+app.use(express.static(path.join(__dirname, 'client')));
 
 
 const modelsPath = './models';
@@ -52,24 +32,11 @@ const libsPath = './libs';
 const middlewaresPath = './middlewares';
 const routesPath = './routes';
 
-// Add headers
-app.use(function (req, res, next) {
-
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-  // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // Pass to next layer of middleware
-  next();
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    next();
 });
 
 //Bootstrap models
@@ -97,6 +64,22 @@ app.use(globalErrorMiddleware.globalNotFoundHandler);
  * Create HTTP server.
  */
 
+const server = http.createServer(app);
+// start listening to http server
+console.log(appConfig);
+server.listen(appConfig.port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+// end server listening code
+
+//socket io connection handler
+const socketLib =require("./libs/socketLib");
+const socketServer=socketLib.setServer(server);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
 
 
 
