@@ -12,7 +12,7 @@ const bodyParser = require('body-parser')
 
 //middlewares
 //const helmet = require('helmet');
-const globalErrorMiddleware = require('./middlewares/globalErrorHandler');
+const globalErrorMiddleware = require('./middlewares/appErrorHandler');
 const routeLogger = require('./middlewares/routeLogger');
 
 const logger = require('./libs/loggerLib')
