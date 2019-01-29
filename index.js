@@ -20,6 +20,15 @@ const logger = require('./libs/loggerLib')
 //declaring an instance or creating an application instance
 const app = express()
 
+
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    next();
+});
+
+
 //middlewares
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
