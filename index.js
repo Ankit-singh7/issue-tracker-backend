@@ -1,88 +1,78 @@
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const app = express();
-const http = require('http');
-const appConfig = require('./config/appConfig');
-const logger = require('./libs/loggerLib');
-const routeLoggerMiddleware = require('./middlewares/routeLogger.js');
-const globalErrorMiddleware = require('./middlewares/appErrorHandler');
+
+const express = require('express')
 const mongoose = require('mongoose');
-const morgan = require('morgan');
 
+const appConfig = require('./config/appConfig')
+const fs = require('fs')
+const http = require('http')
 
-app.use(morgan('dev'));
+//importing the body-parser for fetching 
+const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(routeLoggerMiddleware.logIp);
+//middlewares
+//const helmet = require('helmet');
+const globalErrorMiddleware = require('./middlewares/globalErrorHandler');
+const routeLogger = require('./middlewares/routeLogger');
+
+const logger = require('./libs/loggerLib')
+
+//declaring an instance or creating an application instance
+const app = express()
+
+//middlewares
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser())
+//app.use(helmet());
+
 app.use(globalErrorMiddleware.globalErrorHandler);
+app.use(routeLogger.logIp);
 
-//this line is for chat socket
-app.use(express.static(path.join(__dirname, 'client')));
-
-
-const modelsPath = './models';
-const controllersPath = './controllers';
-const libsPath = './libs';
-const middlewaresPath = './middlewares';
-const routesPath = './routes';
-
-app.all('*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    next();
-});
-
-//Bootstrap models
+// Bootstrap models
+let modelsPath = './models'
+console.log(modelsPath)
 fs.readdirSync(modelsPath).forEach(function (file) {
-  if (~file.indexOf('.js')) require(modelsPath + '/' + file)
-});
+    if (~file.indexOf('.js')) {
+        console.log(file)
+        require(modelsPath + '/' + file)
+    }
+  })
 // end Bootstrap models
 
 // Bootstrap route
+let routesPath = './routes'
+console.log(routesPath)
 fs.readdirSync(routesPath).forEach(function (file) {
-  if (~file.indexOf('.js')) {
-    let route = require(routesPath + '/' + file);
-    route.setRouter(app);
-  }
-});
-// end bootstrap route
-
-// calling global 404 handler after route
+    if (~file.indexOf('.js')) {
+        console.log(routesPath + '/' + file)
+        let route = require(routesPath + '/' + file);
+        route.setRouter(app);
+    }
+}); // end bootstrap route
 
 app.use(globalErrorMiddleware.globalNotFoundHandler);
 
-// end global 404 handler
 
-/**
- * Create HTTP server.
- */
-
+//creating http Server
 const server = http.createServer(app);
-// start listening to http server
-console.log(appConfig);
+
+//start listening to the http server
+
 server.listen(appConfig.port);
-server.on('error', onError);
-server.on('listening', onListening);
+server.on('error',onError);
+server.on('listening',onListening);
 
-// end server listening code
+//end server listening code
 
-//socket io connection handler
-const socketLib =require("./libs/socketLib");
-const socketServer=socketLib.setServer(server);
+const socketLib = require('./libs/socketLib');
+const socketServer = socketLib.setServer(server);
+
+
 
 /**
  * Event listener for HTTP server "error" event.
  */
-
-
-
 
 function onError(error) {
   if (error.syscall !== 'listen') {
@@ -119,7 +109,7 @@ function onListening() {
     : 'port ' + addr.port;
   ('Listening on ' + bind);
   logger.info('server listening on port' + addr.port, 'serverOnListeningHandler', 10);
-  let db = mongoose.connect(appConfig.db.uri,{ useMongoClient: true });
+  let db = mongoose.connect(appConfig.db.uri , { useNewUrlParser: true });
 }
 
 process.on('unhandledRejection', (reason, p) => {
@@ -128,34 +118,26 @@ process.on('unhandledRejection', (reason, p) => {
 });
 
 
-/**
- * database connection settings
- */
+
+
+// handling mongoose connection error
 mongoose.connection.on('error', function (err) {
-  console.log('database connection error');
-  console.log(err)
-  logger.error(err,
-    'mongoose connection on error handler', 10)
-  //process.exit(1)
+    console.log('database connection error');
+    console.log(err)
+
 }); // end mongoose connection error
 
+
+
+
+// handling mongoose success event
 mongoose.connection.on('open', function (err) {
-  if (err) {
-    console.log("database error");
-    console.log(err);
-    logger.error(err, 'mongoose connection open handler', 10)
-  } else {
-    console.log("database connection open success");
-    logger.info("database connection open",
-      'database connection open handler', 10)
-  }
-  //process.exit(1)
-}); // enr mongoose connection open handler
+    if (err) {
+        console.log("database error");
+        console.log(err);
 
+    } else {
+        console.log("database connection open success");
+    }
 
-
-// end socketio connection handler
-
-
-
-module.exports = app;
+}); // end mongoose connection open handler
