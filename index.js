@@ -16,9 +16,10 @@ const globalErrorMiddleware = require('./middlewares/appErrorHandler');
 const routeLogger = require('./middlewares/routeLogger');
 
 const logger = require('./libs/loggerLib')
-
+const morgan=require('morgan');
 //declaring an instance or creating an application instance
 const app = express()
+app.use(morgan('dev'));
 
 
 app.all('*', function(req, res, next) {
