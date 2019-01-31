@@ -45,7 +45,7 @@ let verifyClaim = (token,secretKey,cb) => {
 
 }// end verify claim 
 
-let verifyClaimWithoutSecret = (token,cb) => {
+let verifyClaimsWithoutSecret = (token,cb) => {
   // verify a token symmetric
   jwt.verify(token, secretKey, function (err, decoded) {
     if(err){
@@ -70,5 +70,5 @@ let verifyClaimWithoutSecret = (token,cb) => {
 module.exports = {
   generateToken: generateToken,
   verifyToken  :verifyClaim,
-  verifyClaimWithoutSecret: verifyClaimWithoutSecret
+  verifyClaimsWithoutSecret: verifyClaimsWithoutSecret
 }
