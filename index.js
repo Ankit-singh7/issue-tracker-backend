@@ -1,4 +1,5 @@
 const express = require('express');
+var cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -13,6 +14,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 
 const libs = require('./libs/timeLib');
+
+app.use(cors());
 
 app.use(morgan('dev'));
 
@@ -29,12 +32,6 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 
 
-app.all('*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    next();
-});
 
 //Bootstrap models
 
