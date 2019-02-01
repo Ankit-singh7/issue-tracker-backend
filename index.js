@@ -19,6 +19,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(routeLoggerMiddleware.logIp);
 app.use(globalErrorMiddleware.globalErrorHandler);
 
@@ -27,11 +28,6 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 
 
-const modelsPath = './models';
-const controllersPath = './controllers';
-const libsPath = './libs';
-const middlewaresPath = './middlewares';
-const routesPath = './routes';
 
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -41,12 +37,15 @@ app.all('*', function(req, res, next) {
 });
 
 //Bootstrap models
+
+const modelsPath = './models';
 fs.readdirSync(modelsPath).forEach(function (file) {
   if (~file.indexOf('.js')) require(modelsPath + '/' + file)
 });
 // end Bootstrap models
 
 // Bootstrap route
+const routesPath = './routes';
 fs.readdirSync(routesPath).forEach(function (file) {
   if (~file.indexOf('.js')) {
     let route = require(routesPath + '/' + file);
