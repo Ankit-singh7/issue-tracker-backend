@@ -8,7 +8,7 @@ const app = express();
 const http = require('http');
 const appConfig = require('./config/appConfig');
 const logger = require('./libs/loggerLib');
-const routeLoggerMiddleware = require('./middlewares/routeLogger');
+const routeLoggerMiddleware = require('./middlewares/routeLogger`1  ');
 const globalErrorMiddleware = require('./middlewares/appErrorHandler');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
@@ -22,7 +22,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(routeLoggerMiddleware.logIp);
 app.use(globalErrorMiddleware.globalErrorHandler);
 
@@ -119,7 +119,7 @@ function onListening() {
     : 'port ' + addr.port;
   ('Listening on ' + bind);
   logger.info('server listening on port' + addr.port, 'serverOnListeningHandler', 10);
-  let db = mongoose.connect(appConfig.db.uri,{ useMongoClient: true });
+  let db = mongoose.connect(appConfig.db.uri,{ useNewUrlParser:true });
 }
 
 process.on('unhandledRejection', (reason, p) => {
