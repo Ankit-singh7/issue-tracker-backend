@@ -131,29 +131,27 @@ process.on('unhandledRejection', (reason, p) => {
 /**
  * database connection settings
  */
-mongoose.connection.on('error', function (err) {
-  console.log('database connection error');
-  console.log(err)
-  logger.error(err,
-    'mongoose connection on error handler', 10)
-  //process.exit(1)
-}); // end mongoose connection error
-
-mongoose.connection.on('open', function (err) {
-  if (err) {
-    console.log("database error");
+//handling mongoose connection error
+mongoose.connection.on('error',function(err)
+{
+    console.log('database connection error');
     console.log(err);
-    logger.error(err, 'mongoose connection open handler', 10)
-  } else {
-    console.log("database connection open success");
-    //console.log(libs.isSameDayAsToday(Date()))
+});//end mongoose connection error
 
-    logger.info("database connection open",
-      'database connection open handler', 10)
-  }
-  //process.exit(1)
-}); // enr mongoose connection open handler
+//handling mongoose success event
 
+mongoose.connection.on('open',function(err)
+{
+    if(err)
+    {
+        console.log("database error");
+        console.log(err);
+    }
+
+    else{
+        console.log("database connection open success");
+    }
+});//end mongoose connection open handler
 
 
 module.exports = app;
