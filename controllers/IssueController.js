@@ -146,7 +146,7 @@ let editIssue = (req, res) => {
     let options = req.body;
     console.log(options);
     console.log(req.params.issueId);
-    IssuesModel.update({ 'issueId': req.params.issueId },options , { multi: true }).exec((err, result) => {
+    IssuesModel.updateOne({ 'issueId': req.params.issueId },options , { multi: true }).exec((err, result) => {
 
         if (err) {
             logger.error(`Error occured : ${err}`, 'Database', 10)

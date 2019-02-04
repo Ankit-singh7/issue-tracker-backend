@@ -395,7 +395,7 @@ let resetPasswordFunction = (req, res) => {
                 recoveryPassword: shortid.generate()
             }
     
-            UserModel.update({ 'email': req.body.email }, options).exec((err, result) => {
+            UserModel.updateOne({ 'email': req.body.email }, options).exec((err, result) => {
                 if (err) {
                     console.log(err)
                     logger.error(err.message, 'User Controller:resetPasswordFunction', 10)
@@ -536,7 +536,7 @@ let updatePasswordFunction = (req, res) => {
                 password: passwordLib.hashpassword(req.body.password),
             }
 
-            UserModel.update({ 'userId': userDetails.userId }, options).exec((err, result) => {
+            UserModel.updateOne({ 'userId': userDetails.userId }, options).exec((err, result) => {
                 if (err) {
                     console.log(err)
                     logger.error(err.message, 'User Controller:updatePasswordFunction', 10)
@@ -669,7 +669,7 @@ let changePasswordFunction = (req, res) => {
                 password: passwordLib.hashpassword(req.body.newPassword),
             }
 
-            UserModel.update({ 'userId': userDetails.userId }, options).exec((err, result) => {
+            UserModel.updateOne({ 'userId': userDetails.userId }, options).exec((err, result) => {
                 if (err) {
                     console.log(err)
                     logger.error(err.message, 'User Controller:updatePasswordFunction', 10)
