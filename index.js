@@ -35,14 +35,14 @@ app.use(globalErrorMiddleware.globalErrorHandler);
 
 //Bootstrap models
 
-let modelsPath = './models';
+const modelsPath = './models';
 fs.readdirSync(modelsPath).forEach(function (file) {
   if (~file.indexOf('.js')) require(modelsPath + '/' + file)
 });
 // end Bootstrap models
 
 // Bootstrap route
-let routesPath = './routes';
+const routesPath = './routes';
 fs.readdirSync(routesPath).forEach(function (file) {
   if (~file.indexOf('.js')) {
     let route = require(routesPath + '/' + file);
@@ -133,10 +133,9 @@ process.on('unhandledRejection', (reason, p) => {
  */
 mongoose.connection.on('error', function (err) {
   console.log('database connection error');
-  console.log(err)
-  logger.error(err,
-    'mongoose connection on error handler', 10)
-  //process.exit(1)
+  console.log(err);
+  logger.error(err,'mongoose connection on error handler', 10)
+
 }); // end mongoose connection error
 
 mongoose.connection.on('open', function (err) {
@@ -146,12 +145,11 @@ mongoose.connection.on('open', function (err) {
     logger.error(err, 'mongoose connection open handler', 10)
   } else {
     console.log("database connection open success");
-    //console.log(libs.isSameDayAsToday(Date()))
+  
 
-    logger.info("database connection open",
-      'database connection open handler', 10)
+    logger.info("database connection open", 'database connection open handler', 10)
   }
-  //process.exit(1)
+  
 }); // enr mongoose connection open handler
 
 
