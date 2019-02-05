@@ -19,8 +19,7 @@ let setServer = (server) => {
 
     let io = socketio.listen(server);
     let myio = io.of('')
-    let allOnlineUsers = [];
-
+    
     myio.on('connection', function(socket){
 
         //verifying user
